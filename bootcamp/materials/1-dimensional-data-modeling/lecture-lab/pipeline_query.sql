@@ -1,10 +1,16 @@
-WITH last_season AS (
-    SELECT * FROM players
-    WHERE current_season = 1997
+WITH 
+
+current_season as (
+	select 1996 as current_season
+),
+
+last_season AS (
+    SELECT * FROM players, current_season cs
+    WHERE players.current_season = cs.current_season - 1
 
 ), this_season AS (
-     SELECT * FROM player_seasons
-    WHERE season = 1998
+     SELECT * FROM player_seasons, current_season cs
+    WHERE season = cs.current_season
 )
 INSERT INTO players
 SELECT
@@ -34,10 +40,15 @@ SELECT
                     ELSE 'bad' END)::scoring_class
              ELSE ls.scoring_class
          END as scoring_class,
+         case 
+         	when ts.season is not null then 0
+         	else ls.years_since_last_active + 1
+         end as years_since_last_active,         
          ts.season IS NOT NULL as is_active,
-         1998 AS current_season
+         cs.current_season AS current_season
 
     FROM last_season ls
     FULL OUTER JOIN this_season ts
-    ON ls.player_name = ts.player_name
-
+    ON ls.player_name = ts.player_name,
+   	current_season cs;
+  
