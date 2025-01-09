@@ -2,7 +2,7 @@ create type films as (
     film text,
     votes integer,
     rating float,
-    filmid integer
+    filmid text
 );
 
 create type quality_class as enum (
