@@ -51,7 +51,7 @@ services:
           - warehouse.minio
     ports:
       - 9001:9001
-      - 9000:9000
+      - 9111:9111
     command: ["server", "/data", "--console-address", ":9001"]
   mc:
     depends_on:
